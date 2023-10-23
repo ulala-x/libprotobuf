@@ -1,0 +1,41 @@
+name: CMake with Visual Studio
+
+on: workflow_dispatch
+
+env:
+  BUILD_TYPE: Release
+  PB_LIBRARY_PATH: ${{ github.workspace }}
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Create Build Directory
+      run: mkdir ${{env.PB_LIBRARY_PATH}}\build\_win64
+           
+    - name: Configure CMake with Visual Studio
+      working-directory: ${{env.PB_LIBRARY_PATH}}\build\_win64
+      run: |
+        cmake -G "Visual Studio 16 2019" -A x64 ^
+        -DCMAKE_INSTALL_PREFIX=${{env.PB_LIBRARY_PATH}}/libprotobuf ^
+        -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded$<$<CONFIG:Debug>:Debug>DLL" ^
+        -Dprotobuf_BUILD_TESTS=false -Dprotobuf_WITH_ZLIB=false ^
+        -Dprotobuf_DEBUG_POSTFIX="" ^
+        -DCMAKE_INSTALL_LIBDIR="lib/win64/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>" ^
+        -DCMAKE_INSTALL_CMAKEDIR=lib/win64/cmake ^
+        -Dprotobuf_MSVC_STATIC_RUNTIME=false ^
+        -DCMAKE_POLICY_DEFAULT_CMP0091=NEW -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDLL ^
+        ${{env.PB_LIBRARY_PATH}}/protobuf-source/cmake
+
+    - name: Build and Install (Debug)
+      working-directory: ${{env.PB_LIBRARY_PATH}}\build\_win64
+      run: |
+        cmake --build . --target INSTALL --config Debug
+
+    - name: Build and Install (Release)
+      working-directory: ${{env.PB_LIBRARY_PATH}}\build\_win64
+      run: |
+        cmake --build . --target INSTALL --config Release
