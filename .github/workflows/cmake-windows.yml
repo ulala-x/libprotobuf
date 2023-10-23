@@ -55,5 +55,5 @@ jobs:
     - name: Upload binaries as artifact
       uses: actions/upload-artifact@v2
       with:
-        name: protobuf-binary
-        path: ${{env.PB_LIBRARY_PATH}}\build\_win64\protobuf-win-binary.zip
+        name: protobuf-win64-binary-for-unreal
+        path: ${{env.PB_LIBRARY_PATH}}\libprotobuf\lib\win64
