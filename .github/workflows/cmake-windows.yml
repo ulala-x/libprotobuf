@@ -46,3 +46,14 @@ jobs:
       working-directory: ${{env.PB_LIBRARY_PATH}}\build\_win64
       run: |
         cmake --build . --target INSTALL --config Release
+
+    - name: Archive Protobuf Binaries
+      working-directory: ${{env.PB_LIBRARY_PATH}}\build\_win64
+      run: |
+        7z a protobuf-binaries.zip ./INSTALL/
+
+    - name: Upload binaries as artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: protobuf-binary
+        path: ${{env.PB_LIBRARY_PATH}}\build\_win64\protobuf-win-binary.zip
