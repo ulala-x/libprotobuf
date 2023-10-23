@@ -12,6 +12,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        submodules: 'recursive'
 
     - name: Create Build Directory
       run: mkdir ${{env.PB_LIBRARY_PATH}}\build\_win64
