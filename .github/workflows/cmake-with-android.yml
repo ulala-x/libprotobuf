@@ -25,7 +25,9 @@ jobs:
       uses: nttld/setup-ndk@v1
       with:
         ndk-version: r21e
-        local-cache: true
+        add-to-path: false
+      env:
+        ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
 
     - name: Install Android SDK and NDK
       run: |
