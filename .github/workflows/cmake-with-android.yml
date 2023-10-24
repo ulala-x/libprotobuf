@@ -75,7 +75,7 @@ jobs:
           -DCMAKE_MAKE_PROGRAM="${{env.ANDROID_NDK_NINJA}}" \
           -DANDROID_ABI=$a -Dprotobuf_DEBUG_POSTFIX="" \
           -DCMAKE_INSTALL_PREFIX=${{env.PB_LIBRARY_PATH}}/libprotobuf \
-          -DCMAKE_INSTALL_LIBDIR="lib/android/$a/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>" \
+          -DCMAKE_INSTALL_LIBDIR="lib/android/$a/$<CONFIG>" \
           -DCMAKE_INSTALL_CMAKEDIR=lib/android/$a/cmake \
           -Dprotobuf_BUILD_TESTS=false -Dprotobuf_WITH_ZLIB=false \
           -Dprotobuf_BUILD_PROTOC_BINARIES=false -Dprotobuf_BUILD_LIBPROTOC=false \
