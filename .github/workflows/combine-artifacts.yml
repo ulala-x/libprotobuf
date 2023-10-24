@@ -7,6 +7,9 @@ on:
   #   types:
   #     - completed
 
+env:
+  PB_LIBRARY_PATH: ${{ github.workspace }}
+  
 jobs:
   combine_artifacts:
     runs-on: ubuntu-latest
@@ -14,6 +17,7 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+
 
     - name: Download artifacts from Windows job
       uses: actions/download-artifact@v3
