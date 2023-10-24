@@ -58,15 +58,15 @@ jobs:
         submodules: 'recursive'
         
     - name: Apply patch to protobuf source
-      working-directory: ${{env.PB_LIBRARY_PATH}}\protobuf-source
+      working-directory: ${{env.PB_LIBRARY_PATH}}/protobuf-source
       run: |
         git apply ..\build\patch\diff-base-on-3.19.0.diff
 
     - name: Create Android Build Directory
-      run: mkdir ${{env.PB_LIBRARY_PATH}}\build\_android
+      run: mkdir ${{env.PB_LIBRARY_PATH}}/build/_android
            
     - name: Configure CMake with Andriod Sdk
-      working-directory: ${{env.PB_LIBRARY_PATH}}\build\_android
+      working-directory: ${{env.PB_LIBRARY_PATH}}/build/_android
       run: |
         for a in armeabi-v7a arm64-v8a x86_64; do
         mkdir $a && pushd $a &&
@@ -84,12 +84,12 @@ jobs:
         done
 
     - name: Build and Install (Debug)
-      working-directory: ${{env.PB_LIBRARY_PATH}}\build\_android
+      working-directory: ${{env.PB_LIBRARY_PATH}}/build/_android
       run: |
         ${{env.ANDROID_NDK_CMAKE}} --build . --target INSTALL --config Debug
 
     - name: Build and Install (Release)
-      working-directory: ${{env.PB_LIBRARY_PATH}}\build\_android
+      working-directory: ${{env.PB_LIBRARY_PATH}}/build/_android
       run: |
         ${{env.ANDROID_NDK_CMAKE}} --build . --target INSTALL --config Release
 
