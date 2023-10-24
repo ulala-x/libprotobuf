@@ -39,10 +39,10 @@ jobs:
         cmake --build . --target INSTALL --config Debug 
         cmake --build . --target INSTALL --config Release
       
-    - name: Upload binaries as artifact
+    - name: Upload Binaries As Artifact
       uses: actions/upload-artifact@v3
       with:
-        name: libprotobuf-windows
+        name: LibProtoBuf-Windows
         path: ${{env.PB_LIBRARY_PATH}}\libprotobuf\lib\win64
     
 
@@ -73,7 +73,7 @@ jobs:
       with:
         submodules: 'recursive'
         
-    - name: Apply patch to protobuf source
+    - name: Apply Patch To Protobuf Source
       working-directory: ${{env.PB_LIBRARY_PATH}}/protobuf-source
       run: |
         git apply ../build/patch/diff-base-on-3.19.0.diff
@@ -81,7 +81,7 @@ jobs:
     - name: Create Android Build Directory
       run: mkdir ${{env.PB_LIBRARY_PATH}}/build/_android
            
-    - name: Configure CMake with Andriod Sdk
+    - name: Configure CMake with Andriod ToolChain
       working-directory: ${{env.PB_LIBRARY_PATH}}/build/_android
       run: |
         for a in armeabi-v7a arm64-v8a x86_64; do
@@ -104,7 +104,7 @@ jobs:
     - name: Upload binaries as artifact
       uses: actions/upload-artifact@v3
       with:
-        name: libproto-aos
+        name: LibProtoBuf-For-AOS
         path: ${{env.PB_LIBRARY_PATH}}/libprotobuf/lib/android
 
   build_ios:
@@ -116,15 +116,15 @@ jobs:
       with:
         submodules: 'recursive'
         
-    - name: Apply patch to protobuf source
+    - name: Apply Aatch To Protobuf Source
       working-directory: ${{env.PB_LIBRARY_PATH}}/protobuf-source
       run: |
         git apply ../build/patch/diff-base-on-3.19.0.diff
 
-    - name: Create Android Build Directory
+    - name: Create IOS Build Directory
       run: mkdir ${{env.PB_LIBRARY_PATH}}/build/_ios
            
-    - name: Configure CMake with Andriod Sdk
+    - name: Configure CMake With IOS Toolchain
       working-directory: ${{env.PB_LIBRARY_PATH}}/build/_ios
       run: |
         cmake -G "Unix Makefiles" \
@@ -141,5 +141,5 @@ jobs:
     - name: Upload binaries as artifact
       uses: actions/upload-artifact@v3
       with:
-        name: libproto-for-ios
+        name: LibProtoBuf-For-IOS
         path: ${{env.PB_LIBRARY_PATH}}/libprotobuf/lib/ios
