@@ -30,9 +30,12 @@ jobs:
     - name: Install Android SDK and NDK
       run: |
           echo "Installing Android dependencies..."
-          echo $ANDROID_HOME
-          echo $NDKROOT
-          echo $NDK_CMAKE_VERSION
+          echo ${{env.PB_LIBRARY_PATH}}
+          echo ${{env.ANDROID_HOME}}
+          echo $ANDROID_NDK_HOME
+          cmake --version
+          ninja --version
+          dir 
   
   
     # - name: Checkout
