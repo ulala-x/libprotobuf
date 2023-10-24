@@ -6,7 +6,7 @@ env:
   ANDROID_HOME:	/Users/runner/Library/Android/sdk
   ANDROID_NDK:	/Users/runner/Library/Android/sdk/ndk/25.2.9519653
   ANDROID_NDK_HOME:	/Users/runner/Library/Android/sdk/ndk/25.2.9519653
-  ANDROID_NDK_NINJA: /Users/runner/Library/Android/sdk/cmake/3.22.1/bin/ninj
+  ANDROID_NDK_NINJA: /Users/runner/Library/Android/sdk/cmake/3.22.1/bin/ninja
   ANDROID_NDK_CMAKE: /Users/runner/Library/Android/sdk/cmake/3.22.1/bin/cmake
 
 jobs:
