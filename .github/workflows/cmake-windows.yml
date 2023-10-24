@@ -38,18 +38,7 @@ jobs:
           ${{env.PB_LIBRARY_PATH}}/protobuf-source/cmake 
         cmake --build . --target INSTALL --config Debug 
         cmake --build . --target INSTALL --config Release
-        
-
-    # - name: Build and Install (Debug)
-    #   working-directory: ${{env.PB_LIBRARY_PATH}}\build\_win64
-    #   run: |
-    #     cmake --build . --target INSTALL --config Debug
-
-    # - name: Build and Install (Release)
-    #   working-directory: ${{env.PB_LIBRARY_PATH}}\build\_win64
-    #   run: |
-    #     cmake --build . --target INSTALL --config Release
-
+      
     - name: Upload binaries as artifact
       uses: actions/upload-artifact@v3
       with:
