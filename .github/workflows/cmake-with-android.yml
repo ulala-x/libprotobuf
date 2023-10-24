@@ -60,7 +60,7 @@ jobs:
     - name: Apply patch to protobuf source
       working-directory: ${{env.PB_LIBRARY_PATH}}/protobuf-source
       run: |
-        git apply ..\build\patch\diff-base-on-3.19.0.diff
+        git apply ../build/patch/diff-base-on-3.19.0.diff
 
     - name: Create Android Build Directory
       run: mkdir ${{env.PB_LIBRARY_PATH}}/build/_android
