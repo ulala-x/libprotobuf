@@ -1,4 +1,4 @@
-name: CMake with Visual Studio
+name: LibProto For Windows
 
 on: workflow_dispatch
 
