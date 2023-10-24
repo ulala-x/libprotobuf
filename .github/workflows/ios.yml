@@ -53,5 +53,5 @@ jobs:
     - name: Upload binaries as artifact
       uses: actions/upload-artifact@v3
       with:
-        name: protobuf-android-binary-for-unreal
+        name: libproto-for-ios
         path: ${{env.PB_LIBRARY_PATH}}/libprotobuf/lib/ios
