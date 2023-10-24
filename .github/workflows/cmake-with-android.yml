@@ -46,10 +46,11 @@ jobs:
           echo "Installing Android dependencies..."
           echo ${{env.PB_LIBRARY_PATH}}
           echo ${{env.ANDROID_HOME}}
-          echo ${{env.ANDROID_NDK_ROOT}}
+          echo ${{env.ANDROID_NDK_HOME}}
           echo ${{env.ANDROID_NDK_CMAKE}}
-          ANDROID_NDK_CMAKE --version
-          ANDROID_NDK_NINJA --version
+          echo ${{env.ANDROID_NDK_NINJA}}
+          ${{env.ANDROID_NDK_CMAKE}} --version
+          ${{env.ANDROID_NDK_NINJA}} --version
 
     - name: Accept licenses
       run: echo "y" | ${{env.ANDROID_HOME}}/tools/bin/sdkmanager --licenses
