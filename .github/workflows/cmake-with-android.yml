@@ -21,13 +21,13 @@ jobs:
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
 
-    - name: Setup Android NDK
-      uses: nttld/setup-ndk@v1
-      with:
-        ndk-version: r21e
-        add-to-path: false
-      env:
-        ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+    # - name: Setup Android NDK
+    #   uses: nttld/setup-ndk@v1
+    #   with:
+    #     ndk-version: r21e
+    #     add-to-path: false
+    #   env:
+    #     ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
     
     - name: Install Android SDK and NDK
       run: |
@@ -35,7 +35,7 @@ jobs:
           echo ${{env.PB_LIBRARY_PATH}}
           echo ${{env.ANDROID_HOME}}
           $env:ANDROID_NDK_HOME
-          # dir ${{env.ANDROID_NDK_HOME}}\cmake\
+          dir ${{env.ANDROID_NDK_HOME}}\cmake\
           ninja --version
           dir 
   
