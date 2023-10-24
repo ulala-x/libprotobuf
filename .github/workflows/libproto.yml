@@ -42,7 +42,7 @@ jobs:
     - name: Upload Binaries As Artifact
       uses: actions/upload-artifact@v3
       with:
-        name: LibProtoBuf-Windows
+        name: LibProtoBuf-For-Windows
         path: ${{env.PB_LIBRARY_PATH}}\libprotobuf\lib\win64
     
 
