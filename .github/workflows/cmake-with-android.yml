@@ -28,17 +28,14 @@ jobs:
         add-to-path: false
       env:
         ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
-    - run: |
-        echo ${{steps.setup-ndk.outputs.ndk-path}} 
-        echo ${{env.ANDROID_NDK_HOME}} 
-
+    
     - name: Install Android SDK and NDK
       run: |
           echo "Installing Android dependencies..."
           echo ${{env.PB_LIBRARY_PATH}}
           echo ${{env.ANDROID_HOME}}
-          echo ${{env.ANDROID_NDK_HOME}}
-          dir ${{env.ANDROID_NDK_HOME}}\cmake\
+          $env:ANDROID_NDK_HOME
+          # dir ${{env.ANDROID_NDK_HOME}}\cmake\
           ninja --version
           dir 
   
