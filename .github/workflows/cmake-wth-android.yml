@@ -1,4 +1,4 @@
-name: CMake with Visual Studio
+name: CMake with Android sdk
 
 on: workflow_dispatch
 
