@@ -51,46 +51,47 @@ jobs:
           echo ${{env.ANDROID_NDK_NINJA}}
           ${{env.ANDROID_NDK_CMAKE}} --version
           ${{env.ANDROID_NDK_NINJA}} --version
-
-    - name: Accept licenses
-      run: echo "y" | ${{env.ANDROID_HOME}}/tools/bin/sdkmanager --licenses
-  
-    # - name: Checkout
-    #   uses: actions/checkout@v3
-    #   with:
-    #     submodules: 'recursive'
+   
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        submodules: 'recursive'
         
-    # - name: Apply patch to protobuf source
-    #   run: |
-    #     cd $env:PB_LIBRARY_PATH\protobuf-source
-    #     git apply ..\build\patch\diff-base-on-3.19.0.diff
+    - name: Apply patch to protobuf source
+      run: |
+        cd $env:PB_LIBRARY_PATH\protobuf-source
+        git apply ..\build\patch\diff-base-on-3.19.0.diff
 
-    # - name: Create Android Build Directory
-    #   run: mkdir ${{env.PB_LIBRARY_PATH}}\build\_android
+    - name: Create Android Build Directory
+      run: mkdir ${{env.PB_LIBRARY_PATH}}\build\_android
            
-    # - name: Configure CMake with Andriod Sdk
-    #   working-directory: ${{env.PB_LIBRARY_PATH}}\build\_android
-    #   run: |
-    #     cmake -G "Visual Studio 17 2022" -A x64 `
-    #     -DCMAKE_INSTALL_PREFIX=${{env.PB_LIBRARY_PATH}}/libprotobuf `
-    #     -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded$<$<CONFIG:Debug>:Debug>DLL" `
-    #     -Dprotobuf_BUILD_TESTS=false -Dprotobuf_WITH_ZLIB=false `
-    #     -Dprotobuf_DEBUG_POSTFIX="" `
-    #     -DCMAKE_INSTALL_LIBDIR="lib/win64/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>" `
-    #     -DCMAKE_INSTALL_CMAKEDIR=lib/win64/cmake `
-    #     -Dprotobuf_MSVC_STATIC_RUNTIME=false `
-    #     -DCMAKE_POLICY_DEFAULT_CMP0091=NEW -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDLL `
-    #     ${{env.PB_LIBRARY_PATH}}/protobuf-source/cmake
+    - name: Configure CMake with Andriod Sdk
+      working-directory: ${{env.PB_LIBRARY_PATH}}\build\_android
+      run: |
+        for a in armeabi-v7a arm64-v8a x86_64; do
+        mkdir $a && pushd $a &&
+        ${{env.ANDROID_NDK_CMAKE}} -G "Ninja Multi-Config" \
+        -DCMAKE_TOOLCHAIN_FILE="${{env.ANDROID_NDK_HOME}}/build/cmake/android.toolchain.cmake" \
+        -DCMAKE_MAKE_PROGRAM="${{env.ANDROID_NDK_NINJA}}" \
+        -DANDROID_ABI=$a -Dprotobuf_DEBUG_POSTFIX="" \
+        -DCMAKE_INSTALL_PREFIX=${{env.PB_LIBRARY_PATH}}/libprotobuf \
+        -DCMAKE_INSTALL_LIBDIR="lib/android/$a/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>" \
+        -DCMAKE_INSTALL_CMAKEDIR=lib/android/$a/cmake \
+        -Dprotobuf_BUILD_TESTS=false -Dprotobuf_WITH_ZLIB=false \
+        -Dprotobuf_BUILD_PROTOC_BINARIES=false -Dprotobuf_BUILD_LIBPROTOC=false \
+        ${{env.PB_LIBRARY_PATH}}/protobuf-source/cmake 
+        popd
+        done
 
-    # - name: Build and Install (Debug)
-    #   working-directory: ${{env.PB_LIBRARY_PATH}}\build\_win64
-    #   run: |
-    #     cmake --build . --target INSTALL --config Debug
+    - name: Build and Install (Debug)
+      working-directory: ${{env.PB_LIBRARY_PATH}}\build\_android
+      run: |
+        ${{env.ANDROID_NDK_CMAKE}} --build . --target INSTALL --config Debug
 
-    # - name: Build and Install (Release)
-    #   working-directory: ${{env.PB_LIBRARY_PATH}}\build\_win64
-    #   run: |
-    #     cmake --build . --target INSTALL --config Release
+    - name: Build and Install (Release)
+      working-directory: ${{env.PB_LIBRARY_PATH}}\build\_android
+      run: |
+        ${{env.ANDROID_NDK_CMAKE}} --build . --target INSTALL --config Release
 
     # - name: Upload binaries as artifact
     #   uses: actions/upload-artifact@v3
