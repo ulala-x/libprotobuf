@@ -48,7 +48,7 @@ jobs:
         cmake --build . --target INSTALL --config Release
 
     - name: Upload binaries as artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: protobuf-win64-binary-for-unreal
         path: ${{env.PB_LIBRARY_PATH}}\libprotobuf\lib\win64
