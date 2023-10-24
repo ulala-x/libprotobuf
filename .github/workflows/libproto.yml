@@ -43,7 +43,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: LibProtoBuf-For-Windows
-        path: ${{env.PB_LIBRARY_PATH}}\libprotobuf\lib\win64
+        path: ${{env.PB_LIBRARY_PATH}}\libprotobuf\lib
     
 
   build_android:
@@ -105,7 +105,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: LibProtoBuf-For-AOS
-        path: ${{env.PB_LIBRARY_PATH}}/libprotobuf/lib/android
+        path: ${{env.PB_LIBRARY_PATH}}/libprotobuf/lib
 
   build_ios:
     runs-on: macOS-13
@@ -142,7 +142,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: LibProtoBuf-For-IOS
-        path: ${{env.PB_LIBRARY_PATH}}/libprotobuf/lib/ios
+        path: ${{env.PB_LIBRARY_PATH}}/libprotobuf/lib
 
   combine_artifacts:
       runs-on: ubuntu-latest
