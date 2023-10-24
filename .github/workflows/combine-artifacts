@@ -1,0 +1,47 @@
+name: Build and Combine Artifacts
+
+on:
+  workflow_run:
+    workflows: ["Build LibProto For (Windows,Ios,Aos)"]
+    types:
+      - completed
+
+jobs:
+  combine_artifacts:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Download artifacts from Windows job
+      uses: actions/download-artifact@v2
+      with:
+        name: libprotobuf-windows
+        path: windows-artifacts
+
+    - name: Download artifacts from Android job
+      uses: actions/download-artifact@v2
+      with:
+        name: libproto-aos
+        path: android-artifacts
+
+    - name: Download artifacts from iOS job
+      uses: actions/download-artifact@v2
+      with:
+        name: libproto-for-ios
+        path: ios-artifacts
+
+    - name: Combine artifacts
+      run: |
+        # Combine the artifacts from different jobs into a single directory
+        mkdir combined-artifacts
+        cp -r windows-artifacts/* combined-artifacts/
+        cp -r android-artifacts/* combined-artifacts/
+        cp -r ios-artifacts/* combined-artifacts/
+
+    - name: Upload combined artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: combined-artifacts
+        path: combined-artifacts
