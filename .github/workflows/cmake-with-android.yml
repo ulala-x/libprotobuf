@@ -1,7 +1,6 @@
 name: CMake with Android SDK
 on: workflow_dispatch
 env:
-  BUILD_TYPE: Release
   PB_LIBRARY_PATH: ${{ github.workspace }}
   ANDROID_HOME:	/Users/runner/Library/Android/sdk
   ANDROID_NDK:	/Users/runner/Library/Android/sdk/ndk/25.2.9519653
@@ -80,6 +79,7 @@ jobs:
           -Dprotobuf_BUILD_TESTS=false -Dprotobuf_WITH_ZLIB=false \
           -Dprotobuf_BUILD_PROTOC_BINARIES=false -Dprotobuf_BUILD_LIBPROTOC=false \
           ${{env.PB_LIBRARY_PATH}}/protobuf-source/cmake 
+          ${{env.ANDROID_NDK_CMAKE}} --build . --target install --config Debug
           popd
         done
 
