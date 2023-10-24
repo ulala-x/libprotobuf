@@ -35,17 +35,20 @@ jobs:
         -DCMAKE_INSTALL_CMAKEDIR=lib/win64/cmake `
         -Dprotobuf_MSVC_STATIC_RUNTIME=false `
         -DCMAKE_POLICY_DEFAULT_CMP0091=NEW -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDLL `
-        ${{env.PB_LIBRARY_PATH}}/protobuf-source/cmake
-
-    - name: Build and Install (Debug)
-      working-directory: ${{env.PB_LIBRARY_PATH}}\build\_win64
-      run: |
-        cmake --build . --target INSTALL --config Debug
-
-    - name: Build and Install (Release)
-      working-directory: ${{env.PB_LIBRARY_PATH}}\build\_win64
-      run: |
+        ${{env.PB_LIBRARY_PATH}}/protobuf-source/cmake `
+        cmake --build . --target INSTALL --config Debug 
         cmake --build . --target INSTALL --config Release
+        
+
+    # - name: Build and Install (Debug)
+    #   working-directory: ${{env.PB_LIBRARY_PATH}}\build\_win64
+    #   run: |
+    #     cmake --build . --target INSTALL --config Debug
+
+    # - name: Build and Install (Release)
+    #   working-directory: ${{env.PB_LIBRARY_PATH}}\build\_win64
+    #   run: |
+    #     cmake --build . --target INSTALL --config Release
 
     - name: Upload binaries as artifact
       uses: actions/upload-artifact@v3
