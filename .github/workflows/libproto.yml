@@ -1,0 +1,145 @@
+name: Build LibProto For (Windows,Ios,Aos)
+
+on:
+  workflow_dispatch
+
+env:
+  PB_LIBRARY_PATH: ${{ github.workspace }}
+  
+jobs:
+  build_windows:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: 'recursive'
+
+    - name: Apply patch to protobuf source
+      run: |
+        cd $env:PB_LIBRARY_PATH\protobuf-source
+        git apply ..\build\patch\diff-base-on-3.19.0.diff
+
+    - name: Create Build Directory
+      run: mkdir ${{env.PB_LIBRARY_PATH}}\build\_win64
+           
+    - name: Configure CMake with Visual Studio
+      working-directory: ${{env.PB_LIBRARY_PATH}}\build\_win64
+      run: |
+        cmake -G "Visual Studio 17 2022" -A x64 `
+          -DCMAKE_INSTALL_PREFIX=${{env.PB_LIBRARY_PATH}}/libprotobuf `
+          -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded$<$<CONFIG:Debug>:Debug>DLL" `
+          -Dprotobuf_BUILD_TESTS=false -Dprotobuf_WITH_ZLIB=false `
+          -Dprotobuf_DEBUG_POSTFIX="" `
+          -DCMAKE_INSTALL_LIBDIR="lib/win64/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>" `
+          -DCMAKE_INSTALL_CMAKEDIR=lib/win64/cmake `
+          -Dprotobuf_MSVC_STATIC_RUNTIME=false `
+          -DCMAKE_POLICY_DEFAULT_CMP0091=NEW -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDLL `
+          ${{env.PB_LIBRARY_PATH}}/protobuf-source/cmake 
+        cmake --build . --target INSTALL --config Debug 
+        cmake --build . --target INSTALL --config Release
+      
+    - name: Upload binaries as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: libprotobuf-windows
+        path: ${{env.PB_LIBRARY_PATH}}\libprotobuf\lib\win64
+    
+
+  build_android:
+    env:
+      ANDROID_HOME: /Users/runner/Library/Android/sdk
+      ANDROID_NDK: /Users/runner/Library/Android/sdk/ndk/25.2.9519653
+      ANDROID_NDK_HOME: /Users/runner/Library/Android/sdk/ndk/25.2.9519653
+      ANDROID_NDK_NINJA: /Users/runner/Library/Android/sdk/cmake/3.22.1/bin/ninja
+      ANDROID_NDK_CMAKE: /Users/runner/Library/Android/sdk/cmake/3.22.1/bin/cmake
+      
+    runs-on: macOS-13
+
+    steps: 
+    - name: Install Android SDK and NDK
+      run: |
+          echo "Installing Android dependencies..."
+          echo ${{env.PB_LIBRARY_PATH}}
+          echo ${{env.ANDROID_HOME}}
+          echo ${{env.ANDROID_NDK_HOME}}
+          echo ${{env.ANDROID_NDK_CMAKE}}
+          echo ${{env.ANDROID_NDK_NINJA}}
+          ${{env.ANDROID_NDK_CMAKE}} --version
+          ${{env.ANDROID_NDK_NINJA}} --version
+   
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        submodules: 'recursive'
+        
+    - name: Apply patch to protobuf source
+      working-directory: ${{env.PB_LIBRARY_PATH}}/protobuf-source
+      run: |
+        git apply ../build/patch/diff-base-on-3.19.0.diff
+
+    - name: Create Android Build Directory
+      run: mkdir ${{env.PB_LIBRARY_PATH}}/build/_android
+           
+    - name: Configure CMake with Andriod Sdk
+      working-directory: ${{env.PB_LIBRARY_PATH}}/build/_android
+      run: |
+        for a in armeabi-v7a arm64-v8a x86_64; do
+          mkdir $a && pushd $a &&
+          ${{env.ANDROID_NDK_CMAKE}} -G "Ninja Multi-Config" \
+          -DCMAKE_TOOLCHAIN_FILE="${{env.ANDROID_NDK_HOME}}/build/cmake/android.toolchain.cmake" \
+          -DCMAKE_MAKE_PROGRAM="${{env.ANDROID_NDK_NINJA}}" \
+          -DANDROID_ABI=$a -Dprotobuf_DEBUG_POSTFIX="" \
+          -DCMAKE_INSTALL_PREFIX=${{env.PB_LIBRARY_PATH}}/libprotobuf \
+          -DCMAKE_INSTALL_LIBDIR="lib/android/$a/$<CONFIG>" \
+          -DCMAKE_INSTALL_CMAKEDIR=lib/android/$a/cmake \
+          -Dprotobuf_BUILD_TESTS=false -Dprotobuf_WITH_ZLIB=false \
+          -Dprotobuf_BUILD_PROTOC_BINARIES=false -Dprotobuf_BUILD_LIBPROTOC=false \
+          ${{env.PB_LIBRARY_PATH}}/protobuf-source/cmake 
+          ${{env.ANDROID_NDK_CMAKE}} --build . --target install --config Debug
+          ${{env.ANDROID_NDK_CMAKE}} --build . --target install --config Release
+          popd
+        done
+
+    - name: Upload binaries as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: libproto-aos
+        path: ${{env.PB_LIBRARY_PATH}}/libprotobuf/lib/android
+
+  build_ios:
+    runs-on: macOS-13
+
+    steps:   
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        submodules: 'recursive'
+        
+    - name: Apply patch to protobuf source
+      working-directory: ${{env.PB_LIBRARY_PATH}}/protobuf-source
+      run: |
+        git apply ../build/patch/diff-base-on-3.19.0.diff
+
+    - name: Create Android Build Directory
+      run: mkdir ${{env.PB_LIBRARY_PATH}}/build/_ios
+           
+    - name: Configure CMake with Andriod Sdk
+      working-directory: ${{env.PB_LIBRARY_PATH}}/build/_ios
+      run: |
+        cmake -G "Unix Makefiles" \
+         -DCMAKE_INSTALL_PREFIX=${{env.PB_LIBRARY_PATH}}/libprotobuf \
+         -DCMAKE_TOOLCHAIN_FILE=${{env.PB_LIBRARY_PATH}}/build/ios/ios.toolchain.cmake \
+         -DCMAKE_INSTALL_LIBDIR=lib/ios -DPLATFORM=OS64 \
+         -DCMAKE_INSTALL_CMAKEDIR=lib/ios/cmake -DCMAKE_CXX_STANDARD=17 \
+         -Dprotobuf_BUILD_TESTS=false -Dprotobuf_WITH_ZLIB=false \
+         -Dprotobuf_BUILD_EXAMPLES=false \
+         -Dprotobuf_BUILD_PROTOC_BINARIES=false -Dprotobuf_BUILD_LIBPROTOC=false \
+         ${{env.PB_LIBRARY_PATH}}/protobuf-source/cmake
+        cmake --build . --target install --config Release
+
+    - name: Upload binaries as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: libproto-for-ios
+        path: ${{env.PB_LIBRARY_PATH}}/libprotobuf/lib/ios
