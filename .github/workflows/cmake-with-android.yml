@@ -28,17 +28,22 @@ jobs:
     #     add-to-path: false
     #   env:
     #     ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+
+    - name: Set NDK Path
+      run: echo "ANDROID_NDK_ROOT=/usr/local/share/android-sdk/ndk/25.2.9519653" >> $GITHUB_ENV
+
+    - name: Set CMake Path
+      run: echo "ANDROID_NDK_CMAKE=/usr/local/share/android-sdk/cmake/3.22.1/bin/cmake" >> $GITHUB_ENV
+
     
     - name: Install Android SDK and NDK
       run: |
           echo "Installing Android dependencies..."
           echo ${{env.PB_LIBRARY_PATH}}
           echo ${{env.ANDROID_HOME}}
-          echo ${{env.ANDROID_NDK}}
-          echo ${{env.ANDROID_NDK_HOME}}
           echo ${{env.ANDROID_NDK_ROOT}}
-          echo ${{env.ANDROID_SDK_ROOT}}
-          ls -al ${{env.ANDROID_NDK_HOME}}\cmake\
+          echo ${{env.ANDROID_NDK_CMAKE}}
+          # ls -al ${{env.ANDROID_NDK_ROOT}}\cmake\
   
   
     # - name: Checkout
