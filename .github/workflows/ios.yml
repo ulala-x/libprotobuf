@@ -12,17 +12,7 @@ jobs:
   build:
     runs-on: macOS-13
     steps: 
-    # - name: Install Android SDK and NDK
-    #   run: |
-    #       echo "Installing Android dependencies..."
-    #       echo ${{env.PB_LIBRARY_PATH}}
-    #       echo ${{env.ANDROID_HOME}}
-    #       echo ${{env.ANDROID_NDK_HOME}}
-    #       echo ${{env.ANDROID_NDK_CMAKE}}
-    #       echo ${{env.ANDROID_NDK_NINJA}}
-    #       ${{env.ANDROID_NDK_CMAKE}} --version
-    #       ${{env.ANDROID_NDK_NINJA}} --version
-   
+  
     - name: Checkout
       uses: actions/checkout@v3
       with:
