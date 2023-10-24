@@ -98,4 +98,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: protobuf-android-binary-for-unreal
-        path: ${{env.PB_LIBRARY_PATH}}\libprotobuf\lib\android
+        path: ${{env.PB_LIBRARY_PATH}}/libprotobuf/lib/android
