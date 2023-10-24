@@ -80,18 +80,19 @@ jobs:
           -Dprotobuf_BUILD_PROTOC_BINARIES=false -Dprotobuf_BUILD_LIBPROTOC=false \
           ${{env.PB_LIBRARY_PATH}}/protobuf-source/cmake 
           ${{env.ANDROID_NDK_CMAKE}} --build . --target install --config Debug
+          ${{env.ANDROID_NDK_CMAKE}} --build . --target install --config Release
           popd
         done
 
-    - name: Build and Install (Debug)
-      working-directory: ${{env.PB_LIBRARY_PATH}}/build/_android
-      run: |
-        ${{env.ANDROID_NDK_CMAKE}} --build . --target install --config Debug
+    # - name: Build and Install (Debug)
+    #   working-directory: ${{env.PB_LIBRARY_PATH}}/build/_android
+    #   run: |
+    #     ${{env.ANDROID_NDK_CMAKE}} --build . --target install --config Debug
 
-    - name: Build and Install (Release)
-      working-directory: ${{env.PB_LIBRARY_PATH}}/build/_android
-      run: |
-        ${{env.ANDROID_NDK_CMAKE}} --build . --target install --config Release
+    # - name: Build and Install (Release)
+    #   working-directory: ${{env.PB_LIBRARY_PATH}}/build/_android
+    #   run: |
+    #     ${{env.ANDROID_NDK_CMAKE}} --build . --target install --config Release
 
     - name: Upload binaries as artifact
       uses: actions/upload-artifact@v3
