@@ -32,8 +32,8 @@ jobs:
           echo "Installing Android dependencies..."
           echo ${{env.PB_LIBRARY_PATH}}
           echo ${{env.ANDROID_HOME}}
-          echo $ANDROID_NDK_HOME
-          cmake --version
+          echo ${{env.ANDROID_NDK_HOME}}
+          dir ${{env.ANDROID_NDK_HOME}}\cmake\
           ninja --version
           dir 
   
