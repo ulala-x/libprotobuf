@@ -1,0 +1,77 @@
+name: CMake with Visual Studio
+
+on: workflow_dispatch
+
+env:
+  BUILD_TYPE: Release
+  PB_LIBRARY_PATH: ${{ github.workspace }}
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+          java-version: '17'
+          distribution: 'temurin'
+          
+    - name: Setup Android SDK and NDK
+      uses: android-actions/setup-android@v3
+      with:
+          api-level: 30
+          build-tools-version: '30.0.3'
+          ndk-version: '21.3.6528147'
+          cmake-version: '3.10.2'
+
+     - name: Install Android SDK and NDK
+        run: |
+        echo "Installing Android dependencies..."
+        echo $ANDROID_HOME
+        echo $NDKROOT
+        echo $NDK_CMAKE_VERSION
+        # [TODO]: SDK, NDK 설치 스크립트 추가
+    
+
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        submodules: 'recursive'
+        
+    - name: Apply patch to protobuf source
+      run: |
+        cd $env:PB_LIBRARY_PATH\protobuf-source
+        git apply ..\build\patch\diff-base-on-3.19.0.diff
+
+    - name: Create Android Build Directory
+      run: mkdir ${{env.PB_LIBRARY_PATH}}\build\_android
+           
+    - name: Configure CMake with Andriod Sdk
+      working-directory: ${{env.PB_LIBRARY_PATH}}\build\_android
+      run: |
+        cmake -G "Visual Studio 17 2022" -A x64 `
+        -DCMAKE_INSTALL_PREFIX=${{env.PB_LIBRARY_PATH}}/libprotobuf `
+        -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded$<$<CONFIG:Debug>:Debug>DLL" `
+        -Dprotobuf_BUILD_TESTS=false -Dprotobuf_WITH_ZLIB=false `
+        -Dprotobuf_DEBUG_POSTFIX="" `
+        -DCMAKE_INSTALL_LIBDIR="lib/win64/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>" `
+        -DCMAKE_INSTALL_CMAKEDIR=lib/win64/cmake `
+        -Dprotobuf_MSVC_STATIC_RUNTIME=false `
+        -DCMAKE_POLICY_DEFAULT_CMP0091=NEW -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDLL `
+        ${{env.PB_LIBRARY_PATH}}/protobuf-source/cmake
+
+    - name: Build and Install (Debug)
+      working-directory: ${{env.PB_LIBRARY_PATH}}\build\_win64
+      run: |
+        cmake --build . --target INSTALL --config Debug
+
+    - name: Build and Install (Release)
+      working-directory: ${{env.PB_LIBRARY_PATH}}\build\_win64
+      run: |
+        cmake --build . --target INSTALL --config Release
+
+    - name: Upload binaries as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: protobuf-win64-binary-for-unreal
+        path: ${{env.PB_LIBRARY_PATH}}\libprotobuf\lib\win64
