@@ -35,7 +35,7 @@ jobs:
           -DCMAKE_INSTALL_CMAKEDIR=lib/win64/cmake `
           -Dprotobuf_MSVC_STATIC_RUNTIME=false `
           -DCMAKE_POLICY_DEFAULT_CMP0091=NEW -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDLL `
-          ${{env.PB_LIBRARY_PATH}}/protobuf-source/cmake `
+          ${{env.PB_LIBRARY_PATH}}/protobuf-source/cmake 
         cmake --build . --target INSTALL --config Debug 
         cmake --build . --target INSTALL --config Release
         
