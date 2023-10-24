@@ -17,19 +17,19 @@ jobs:
     - name: Download artifacts from Windows job
       uses: actions/download-artifact@v2
       with:
-        name: libprotobuf-windows
+        name: LibProtoBuf-For-Windows
         path: windows-artifacts
 
     - name: Download artifacts from Android job
       uses: actions/download-artifact@v2
       with:
-        name: libproto-aos
+        name: LibProtoBuf-For-AOS
         path: android-artifacts
 
     - name: Download artifacts from iOS job
       uses: actions/download-artifact@v2
       with:
-        name: libproto-for-ios
+        name: LibProtoBuf-For-IOS
         path: ios-artifacts
 
     - name: Combine artifacts
