@@ -1,12 +1,8 @@
 name: CMake with Android SDK
-
 on: workflow_dispatch
-
 env:
   BUILD_TYPE: Release
   PB_LIBRARY_PATH: ${{ github.workspace }}
-  ANDROID_HOME: C:\Android\android-sdk
-  ANDROID_SDK_ROOT: C:\Android\android-sdk
 
 jobs:
   build:
