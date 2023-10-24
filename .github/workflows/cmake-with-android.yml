@@ -39,8 +39,7 @@ jobs:
     # - name: Set Ninja Path
     #   run: echo "ANDROID_NDK_NINJA=/usr/local/share/android-sdk/cmake/3.22.1/bin/ninja" >> $GITHUB_ENV
 
-    - name: Accept licenses
-      run: echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --licenses
+  
     
     - name: Install Android SDK and NDK
       run: |
@@ -51,7 +50,9 @@ jobs:
           echo ${{env.ANDROID_NDK_CMAKE}}
           ANDROID_NDK_CMAKE --version
           ANDROID_NDK_NINJA --version
-  
+
+    - name: Accept licenses
+      run: echo "y" | ${{env.ANDROID_HOME}}/tools/bin/sdkmanager --licenses
   
     # - name: Checkout
     #   uses: actions/checkout@v3
