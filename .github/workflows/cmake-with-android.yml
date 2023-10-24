@@ -12,32 +12,34 @@ jobs:
   build:
     runs-on: macOS-latest
     steps:
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-          java-version: '17'
-          distribution: 'temurin'
+    # - name: Set up JDK 17
+    #   uses: actions/setup-java@v3
+    #   with:
+    #       java-version: '17'
+    #       distribution: 'temurin'
           
-    - name: Setup Android SDK
-      uses: android-actions/setup-android@v3
+    # - name: Setup Android SDK
+    #   uses: android-actions/setup-android@v3
 
-    - name: Setup Android NDK
-      uses: nttld/setup-ndk@v1
-      with:
-        ndk-version: r21e
-        add-to-path: false
-      env:
-        ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+    # - name: Setup Android NDK
+    #   uses: nttld/setup-ndk@v1
+    #   with:
+    #     ndk-version: r21e
+    #     add-to-path: false
+    #   env:
+    #     ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
     
     - name: Install Android SDK and NDK
       run: |
           echo "Installing Android dependencies..."
           echo ${{env.PB_LIBRARY_PATH}}
           echo ${{env.ANDROID_HOME}}
+          echo ${{env.ANDROID_NDK}}
           echo ${{env.ANDROID_NDK_HOME}}
+          echo ${{env.ANDROID_NDK_ROOT}}
+          echo ${{env.ANDROID_SDK_ROOT}}
+          
           ls ${{env.ANDROID_NDK_HOME}}\cmake\
-          ninja --version
-          dir 
   
   
     # - name: Checkout
