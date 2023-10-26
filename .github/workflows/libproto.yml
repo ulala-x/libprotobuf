@@ -1,4 +1,4 @@
-name: Build LibProto For (Windows,Ios,Aos)
+name: Build LibProto For (Windows,Ios,Aos,Mac)
 
 on:
   workflow_dispatch
