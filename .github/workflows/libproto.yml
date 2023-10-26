@@ -144,9 +144,45 @@ jobs:
         name: LibProtoBuf-For-IOS
         path: ${{env.PB_LIBRARY_PATH}}/libprotobuf/lib
 
+  build_mac:
+    runs-on: macOS-13
+
+    steps:   
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        submodules: 'recursive'
+        
+    - name: Apply Aatch To Protobuf Source
+      working-directory: ${{env.PB_LIBRARY_PATH}}/protobuf-source
+      run: |
+        git apply ../build/patch/diff-base-on-3.19.0.diff
+
+    - name: Create IOS Build Directory
+      run: mkdir ${{env.PB_LIBRARY_PATH}}/build/_mac
+           
+    - name: Configure CMake With Mac Toolchain
+      working-directory: ${{env.PB_LIBRARY_PATH}}/build/_mac
+      run: |
+        cmake -G "Unix Makefiles" \
+         -DCMAKE_INSTALL_PREFIX=${{env.PB_LIBRARY_PATH}}/libprotobuf \
+         -DCMAKE_INSTALL_LIBDIR=lib/mac -DCMAKE_OSX_DEPLOYMENT_TARGET=10.14 \
+         -DCMAKE_INSTALL_CMAKEDIR=lib/mac/cmake -DCMAKE_CXX_STANDARD=14 \
+         -Dprotobuf_BUILD_TESTS=false -Dprotobuf_WITH_ZLIB=false \
+         -Dprotobuf_BUILD_EXAMPLES=false \
+         -Dprotobuf_BUILD_PROTOC_BINARIES=false -Dprotobuf_BUILD_LIBPROTOC=false \
+         ${{env.PB_LIBRARY_PATH}}/protobuf-source/cmake
+        cmake --build . --target install --config Release
+
+    - name: Upload binaries as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: LibProtoBuf-For-Mac
+        path: ${{env.PB_LIBRARY_PATH}}/libprotobuf/lib
+
   combine_artifacts:
       runs-on: ubuntu-latest
-      needs: [build_windows, build_android, build_ios]
+      needs: [build_windows, build_android, build_ios,build_mac]
 
       steps:
       - name: Checkout code
@@ -170,6 +206,12 @@ jobs:
         with:
           name: LibProtoBuf-For-IOS
           path: ios-artifacts
+
+      - name: Download artifacts from Mac job
+        uses: actions/download-artifact@v3
+        with:
+          name: LibProtoBuf-For-Mac
+          path: mac-artifacts
   
       - name: Combine artifacts
         run: |
@@ -178,6 +220,7 @@ jobs:
           cp -r windows-artifacts/* combined-artifacts/
           cp -r android-artifacts/* combined-artifacts/
           cp -r ios-artifacts/* combined-artifacts/
+          cp -r mac-artifacts/* combined-artifacts/
   
       - name: Upload combined artifacts
         uses: actions/upload-artifact@v3
