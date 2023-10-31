@@ -160,13 +160,19 @@ jobs:
 
     - name: Create IOS Build Directory
       run: mkdir ${{env.PB_LIBRARY_PATH}}/build/_mac
+
+    - name: Set Xcode version
+      run: sudo xcode-select -s /Applications/Xcode_14.2.app/Contents/Developer
+
+    - name: Print Xcode version
+      run: xcodebuild -version
            
     - name: Configure CMake With Mac Toolchain
       working-directory: ${{env.PB_LIBRARY_PATH}}/build/_mac
       run: |
         cmake -G "Unix Makefiles" \
          -DCMAKE_INSTALL_PREFIX=${{env.PB_LIBRARY_PATH}}/libprotobuf \
-         -DCMAKE_INSTALL_LIBDIR=lib/mac -DCMAKE_OSX_DEPLOYMENT_TARGET=13.3 \
+         -DCMAKE_INSTALL_LIBDIR=lib/mac -DCMAKE_OSX_DEPLOYMENT_TARGET=13.1 \
          -DCMAKE_INSTALL_CMAKEDIR=lib/mac/cmake -DCMAKE_CXX_STANDARD=17 \
          -DCMAKE_OSX_ARCHITECTURES=arm64 \
          -Dprotobuf_BUILD_TESTS=false -Dprotobuf_WITH_ZLIB=false \
