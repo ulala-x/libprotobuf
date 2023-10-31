@@ -128,14 +128,14 @@ jobs:
       working-directory: ${{env.PB_LIBRARY_PATH}}/build/_ios
       run: |
         cmake -G "Unix Makefiles" \
-            -DCMAKE_INSTALL_PREFIX=${{env.PB_LIBRARY_PATH}}/libprotobuf \
-            -DCMAKE_INSTALL_LIBDIR=lib/mac -DCMAKE_OSX_DEPLOYMENT_TARGET=10.14 \
-            -DCMAKE_INSTALL_CMAKEDIR=lib/mac/cmake -DCMAKE_CXX_STANDARD=14 \
-            -Dprotobuf_BUILD_TESTS=false -Dprotobuf_WITH_ZLIB=false \
-            -Dprotobuf_BUILD_EXAMPLES=false \
-            -Dprotobuf_BUILD_PROTOC_BINARIES=false -Dprotobuf_BUILD_LIBPROTOC=false \
-            -DCMAKE_OSX_ARCHITECTURES=arm64 \
-            ${{env.PB_LIBRARY_PATH}}/protobuf-source/cmake
+         -DCMAKE_INSTALL_PREFIX=${{env.PB_LIBRARY_PATH}}/libprotobuf \
+         -DCMAKE_TOOLCHAIN_FILE=${{env.PB_LIBRARY_PATH}}/build/ios/ios.toolchain.cmake \
+         -DCMAKE_INSTALL_LIBDIR=lib/ios -DPLATFORM=OS64 \
+         -DCMAKE_INSTALL_CMAKEDIR=lib/ios/cmake -DCMAKE_CXX_STANDARD=17 \
+         -Dprotobuf_BUILD_TESTS=false -Dprotobuf_WITH_ZLIB=false \
+         -Dprotobuf_BUILD_EXAMPLES=false \
+         -Dprotobuf_BUILD_PROTOC_BINARIES=false -Dprotobuf_BUILD_LIBPROTOC=false \
+         ${{env.PB_LIBRARY_PATH}}/protobuf-source/cmake
         cmake --build . --target install --config Release
 
     - name: Upload binaries as artifact
@@ -168,6 +168,7 @@ jobs:
          -DCMAKE_INSTALL_PREFIX=${{env.PB_LIBRARY_PATH}}/libprotobuf \
          -DCMAKE_INSTALL_LIBDIR=lib/mac -DCMAKE_OSX_DEPLOYMENT_TARGET=10.14 \
          -DCMAKE_INSTALL_CMAKEDIR=lib/mac/cmake -DCMAKE_CXX_STANDARD=14 \
+         -DCMAKE_OSX_ARCHITECTURES=arm64 \
          -Dprotobuf_BUILD_TESTS=false -Dprotobuf_WITH_ZLIB=false \
          -Dprotobuf_BUILD_EXAMPLES=false \
          -Dprotobuf_BUILD_PROTOC_BINARIES=false -Dprotobuf_BUILD_LIBPROTOC=false \
