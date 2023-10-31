@@ -54,7 +54,7 @@ jobs:
       ANDROID_NDK_NINJA: /Users/runner/Library/Android/sdk/cmake/3.22.1/bin/ninja
       ANDROID_NDK_CMAKE: /Users/runner/Library/Android/sdk/cmake/3.22.1/bin/cmake
       
-    runs-on: macOS-13
+    runs-on: macOS-13-arm64
 
     steps: 
     - name: Install Android SDK and NDK
@@ -108,7 +108,7 @@ jobs:
         path: ${{env.PB_LIBRARY_PATH}}/libprotobuf/lib
 
   build_ios:
-    runs-on: macOS-13
+    runs-on: macOS-13-arm64
 
     steps:   
     - name: Checkout
@@ -145,7 +145,7 @@ jobs:
         path: ${{env.PB_LIBRARY_PATH}}/libprotobuf/lib
 
   build_mac:
-    runs-on: macOS-13
+    runs-on: macOS-13-arm64
 
     steps:   
     - name: Checkout
@@ -166,8 +166,8 @@ jobs:
       run: |
         cmake -G "Unix Makefiles" \
          -DCMAKE_INSTALL_PREFIX=${{env.PB_LIBRARY_PATH}}/libprotobuf \
-         -DCMAKE_INSTALL_LIBDIR=lib/mac -DCMAKE_OSX_DEPLOYMENT_TARGET=10.14 \
-         -DCMAKE_INSTALL_CMAKEDIR=lib/mac/cmake -DCMAKE_CXX_STANDARD=14 \
+         -DCMAKE_INSTALL_LIBDIR=lib/mac -DCMAKE_OSX_DEPLOYMENT_TARGET=13.3 \
+         -DCMAKE_INSTALL_CMAKEDIR=lib/mac/cmake -DCMAKE_CXX_STANDARD=17 \
          -DCMAKE_OSX_ARCHITECTURES=arm64 \
          -Dprotobuf_BUILD_TESTS=false -Dprotobuf_WITH_ZLIB=false \
          -Dprotobuf_BUILD_EXAMPLES=false \
