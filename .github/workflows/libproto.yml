@@ -145,7 +145,7 @@ jobs:
         path: ${{env.PB_LIBRARY_PATH}}/libprotobuf/lib
 
   build_mac:
-    runs-on: macOS-13
+    runs-on: macOS-12
 
     steps:   
     - name: Checkout
@@ -177,7 +177,7 @@ jobs:
       run: |
         cmake -G "Unix Makefiles" \
          -DCMAKE_INSTALL_PREFIX=${{env.PB_LIBRARY_PATH}}/libprotobuf \
-         -DCMAKE_INSTALL_LIBDIR=lib/mac -DCMAKE_OSX_DEPLOYMENT_TARGET=13.1 \
+         -DCMAKE_INSTALL_LIBDIR=lib/mac -DCMAKE_OSX_DEPLOYMENT_TARGET=10.14 \
          -DCMAKE_INSTALL_CMAKEDIR=lib/mac/cmake -DCMAKE_CXX_STANDARD=17 \
          -DCMAKE_OSX_ARCHITECTURES=arm64 \
          -Dprotobuf_BUILD_TESTS=false -Dprotobuf_WITH_ZLIB=false \
