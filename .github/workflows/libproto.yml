@@ -124,8 +124,8 @@ jobs:
     - name: Create IOS Build Directory
       run: mkdir ${{env.PB_LIBRARY_PATH}}/build/_ios
 
-    - name: Set Xcode version
-      run: sudo xcode-select -s /Applications/Xcode_13.4.1.app/Contents/Developer
+    # - name: Set Xcode version
+    #   run: sudo xcode-select -s /Applications/Xcode_13.4.1.app/Contents/Developer
     
     - name: Print Xcode version
       run: xcodebuild -version
@@ -168,8 +168,8 @@ jobs:
     - name: Create Mac Build Directory
       run: mkdir ${{env.PB_LIBRARY_PATH}}/build/_mac
 
-    - name: Set Xcode version
-      run: sudo xcode-select -s /Applications/Xcode_13.4.1.app/Contents/Developer
+    # - name: Set Xcode version
+    #   run: sudo xcode-select -s /Applications/Xcode_13.4.1.app/Contents/Developer
     
     - name: Print Xcode version
       run: xcodebuild -version
